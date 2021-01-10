@@ -19,10 +19,13 @@ for it = 1:Nt-1
 end
 
 %% Plots
-plot(t, I, '-b', 'LineWidth', 2)
-axis([0 tmax 0 Imax])
 grid on
 grid minor
 xlabel('Times (weeks)')
 ylabel('Number Infected')
 title('Number of infections vs. Time')
+h = animatedline;
+for i = 1:length(t)
+   addpoints(h,t(i),I(i));
+   drawnow;
+end
