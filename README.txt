@@ -1,1 +1,1 @@
-go out, nothing here yet
+SEIRD with Random Variable
