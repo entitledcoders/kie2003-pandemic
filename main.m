@@ -1,17 +1,13 @@
 
 %% Set Parameters
-I0 = .01; % Initial proportion of infected.
+I0 = 1; % Initial proportion of infected.
 
-% a_mean = 0.5; % Infection Rate in weak^-1  ( )
-% b_mean = 0.1; % Recovery Coeficient in weak^-1    ( )
-% c_mean = 0.01; % Death Coeficient in weak^-1      ( )
-
-year = 1;
+year = 2;
 tmax = 52*year; % Number of weeks
 dt = 0.01; % Size of time step in weeks
 
 plotchoice = 5; 
-% 1=S | 2=I | 3=R | 4=D | 5=SIRD
+% 1=S | 2=I | 3=R | 4=D | 5=SIRD | 6=IRD
 
 %% Initialize Vectors
 t = 0:dt:tmax; % Time vector
@@ -25,22 +21,22 @@ I(1) = I0; % Set initial infection value
 
 %% Calculations
 for it = 1:Nt-1
-%     a = infection_rate(a_list);
-%     b = recovery_rate()
-%     c = death_rate(mean(c_list))
-%     
-%     S(it) = 1 - I(it) - R(it) - D(it); 
-%     
-%     dI = a*I(it)*S(it) - b*I(it) - c*I(it);
-%     I(it+1) = I(it) + dI*dt;
-%     
-%     dR = b*I(it);
-%     R(it+1) = R(it) + dR*dt;
-%     
-%     dD = c*I(it);
-%     D(it+1) = D(it) + dD*dt;
+    a = randn * 2.5e-3 + mean(a_list); % Gaussian Distribution (miu = mean(a_list), sigma = 2.5e-3)
+    b = rand() / 5;                    % Uniform Distribution from 0 to 0.2
+    c = -log(rand()) * mean(c_list);   % Exponential Distribution (miu = mean(c_list))
+    
+    S(it) = 100 - I(it) - R(it) - D(it); 
+    
+    dI = a*I(it)*S(it) - b*I(it) - c*I(it);
+    I(it+1) = I(it) + dI*dt;
+    
+    dR = b*I(it);
+    R(it+1) = R(it) + dR*dt;
+    
+    dD = c*I(it);
+    D(it+1) = D(it) + dD*dt;
 end
-S(Nt) = S(Nt-1);
+S(Nt) = S(Nt-1); % Final value adjustment
 
 %% Plots
 switch plotchoice
@@ -85,12 +81,25 @@ switch plotchoice
              t,I,'-r',...
              t,R,'-b',...
              t,D,'-m','LineWidth',2)
-        axis([0 tmax 0 1])
+        axis([0 tmax 0 max(S)])
         grid on
         grid minor
         xlabel('Times (weeks)')
         ylabel('Proportion of SIRD')
         title('Proportion of SIRD vs. Time')
         legend('S','I','R','D',...
+               'Location','East')
+           
+     case 6
+        plot(t,I,'-r',...
+             t,R,'-b',...
+             t,D,'-m','LineWidth',2)
+        axis([0 tmax 0 max(R)])
+        grid on
+        grid minor
+        xlabel('Times (weeks)')
+        ylabel('Proportion of IRD')
+        title('Proportion of IRD vs. Time')
+        legend('I','R','D',...
                'Location','East')
 end
