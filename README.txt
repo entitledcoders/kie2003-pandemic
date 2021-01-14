@@ -1,1 +1,1 @@
-SEIRD with Random Variable
+SIRD with Random Variable

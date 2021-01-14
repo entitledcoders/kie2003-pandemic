@@ -6,7 +6,7 @@ year = 2;
 tmax = 52*year; % Number of weeks
 dt = 0.01; % Size of time step in weeks
 
-plotchoice = 5; 
+plotchoice = 6; 
 % 1=S | 2=I | 3=R | 4=D | 5=SIRD | 6=IRD
 
 %% Initialize Vectors

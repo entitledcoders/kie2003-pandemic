@@ -11,7 +11,7 @@ a_list = zeros(1,maxWeek);
 b_list = zeros(1,maxWeek);
 c_list = zeros(1,maxWeek);
 
-plotchoice = 20;
+plotchoice = 23;
 % 10=Data plot | 11=infect_list  | 12= recover_list | 13=_list
 % 20=List plot | 21= a_list      | 22= b_list       | 23=c_list
 
