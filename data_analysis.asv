@@ -1,4 +1,4 @@
-plotchoice = 21; 
+plotchoice = 10; 
 % 10=Data plot | 11=death_list
 % 20=List plot | 21= c_list | 22= b_list
 
