@@ -1,6 +1,6 @@
-function b = recovery_rate()
+function b = recovery_rate(b_list)
 % 0 to 0.2 with uniformly distributed
 
-b = rand()/5;
+b = 
 
 end
