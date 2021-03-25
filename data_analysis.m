@@ -1,5 +1,5 @@
 %% Set Parameters
-data = readmatrix("covid_data.csv");
+data = readmatrix("resources/covid_data.csv");
 [row,column] = size(data);
 maxWeek = row/7;
 

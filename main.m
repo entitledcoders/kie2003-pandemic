@@ -1,6 +1,6 @@
 
 %% Set Parameters
-I0 = 1; % Initial proportion of infected.
+I0 = 1; % Initial percentage of infected.
 
 year = 2;
 tmax = 52*year; % Number of weeks
@@ -21,7 +21,7 @@ I(1) = I0; % Set initial infection value
 
 %% Calculations
 for it = 1:Nt-1
-    a = randn * 2.5e-3 + mean(a_list); % Gaussian Distribution (miu = mean(a_list), sigma = 2.5e-3)
+    a = randn * 2.5e-3 + mean(a_list);  % Gaussian Distribution (miu = mean(a_list), sigma = 2.5e-3)
     b = rand() / 5;                    % Uniform Distribution from 0 to 0.2
     c = -log(rand()) * mean(c_list);   % Exponential Distribution (miu = mean(c_list))
     
