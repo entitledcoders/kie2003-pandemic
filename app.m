@@ -25,10 +25,6 @@ classdef app < matlab.apps.AppBase
     % Properties that correspond to apps with auto-reflow
     properties (Access = private)
         onePanelWidth = 576;
-    end
-
-    
-    properties (Access = private)
         plotchoice      % choice for our plot
         tmax            % duration of plot
         a_list          % rate of S -> I
@@ -59,15 +55,13 @@ classdef app < matlab.apps.AppBase
             app.R = zeros(1,Nt); % Recovered vector
             app.D = zeros(1,Nt); % Death vector
             
-            
+            app.I(1) = app.I0; % Set initial infection value
             
             % Calculation
             for it = 1:Nt-1
                 a = randn*(2.5e-3) + mean(app.a_list);          % Gaussian Distribution (miu = mean(a_list), sigma = 2.5e-3)
                 b = rand/5;                                     % Uniform Distribution from 0 to 0.2
                 c = -log(rand) * mean(app.c_list);              % Exponential Distribution (miu = mean(c_list))
-                
-                app.I(1) = app.I0; % Set initial infection value
                 
                 % S-RATE
                 app.S(it) = 100 - app.I(it) - app.R(it) - app.D(it); 
@@ -281,11 +275,6 @@ classdef app < matlab.apps.AppBase
             end
         end
 
-        % Callback function
-        function FETCHButtonPushed(app, event)
-            fetch(app);
-        end
-
         % Button pushed function: PLOTButton
         function PLOTButtonPushed(app, event)
             app.plotchoice
@@ -308,24 +297,14 @@ classdef app < matlab.apps.AppBase
             app.plotchoice = app.PlotDropDown.Value;
         end
 
-        % Callback function
-        function I_naughtSliderValueChanged(app, event)
-            app.I0 = app.I_naughtSlider.Value;
-        end
-
         % Value changed function: PlotDropDown_2
         function PlotDropDown_2ValueChanged(app, event)
             app.plotchoice = app.PlotDropDown_2.Value;
         end
-
-        % Drop down opening function: PlotDropDown
-        function PlotDropDownOpening(app, event)
-            app.plotchoice = app.PlotDropDown.Value;
-        end
-
-        % Drop down opening function: PlotDropDown_2
-        function PlotDropDown_2Opening(app, event)
-            app.plotchoice = app.PlotDropDown_2.Value;
+        
+        % Value changed function: I_naughtSpinner
+        function I_naughtSpinnerValueChanged(app, event)
+            app.I0 = app.I_naughtSpinner.Value;
         end
     end
 
@@ -353,14 +332,14 @@ classdef app < matlab.apps.AppBase
 
             % Create LeftPanel
             app.LeftPanel = uipanel(app.GridLayout);
-            app.LeftPanel.BackgroundColor = [0.8549 0.1608 0.1098];
+            app.LeftPanel.BackgroundColor = [0.502 0.502 0.502];
             app.LeftPanel.Layout.Row = 1;
             app.LeftPanel.Layout.Column = 1;
 
             % Create RightPanel
             app.RightPanel = uipanel(app.GridLayout);
             app.RightPanel.ForegroundColor = [1 1 1];
-            app.RightPanel.BackgroundColor = [1 0.7804 0.1725];
+            app.RightPanel.BackgroundColor = [0.651 0.651 0.651];
             app.RightPanel.Layout.Row = 1;
             app.RightPanel.Layout.Column = 2;
 
@@ -372,41 +351,36 @@ classdef app < matlab.apps.AppBase
             % Create DataAnalysisPlotTab
             app.DataAnalysisPlotTab = uitab(app.TabGroup);
             app.DataAnalysisPlotTab.Title = 'Data Analysis Plot';
-            app.DataAnalysisPlotTab.BackgroundColor = [0.8549 0.1608 0.1098];
-            app.DataAnalysisPlotTab.ForegroundColor = [0.8549 0.1608 0.1098];
+            app.DataAnalysisPlotTab.BackgroundColor = [0.8 0.8 0.8];
 
             % Create PlotDropDownLabel
             app.PlotDropDownLabel = uilabel(app.DataAnalysisPlotTab);
-            app.PlotDropDownLabel.BackgroundColor = [0.8549 0.1608 0.1098];
+            app.PlotDropDownLabel.BackgroundColor = [0.8 0.8 0.8];
             app.PlotDropDownLabel.HorizontalAlignment = 'right';
-            app.PlotDropDownLabel.FontName = 'Comic Sans MS';
             app.PlotDropDownLabel.FontSize = 20;
-            app.PlotDropDownLabel.FontColor = [1 1 1];
-            app.PlotDropDownLabel.Position = [81 24 41 31];
+            app.PlotDropDownLabel.FontColor = [0.149 0.149 0.149];
+            app.PlotDropDownLabel.Position = [82 31 40 24];
             app.PlotDropDownLabel.Text = 'Plot';
 
             % Create PlotDropDown
             app.PlotDropDown = uidropdown(app.DataAnalysisPlotTab);
             app.PlotDropDown.Items = {'Weekly Data', 'Weekly Infected', 'Weekly Recovered', 'Weekly Death', 'Constants', 'a values', 'b values', 'c values', ''};
             app.PlotDropDown.ItemsData = {'10', '11', '12', '13', '20', '21', '22', '23'};
-            app.PlotDropDown.DropDownOpeningFcn = createCallbackFcn(app, @PlotDropDownOpening, true);
             app.PlotDropDown.ValueChangedFcn = createCallbackFcn(app, @PlotDropDownValueChanged, true);
-            app.PlotDropDown.FontName = 'Comic Sans MS';
             app.PlotDropDown.FontSize = 20;
+            app.PlotDropDown.FontColor = [0.149 0.149 0.149];
             app.PlotDropDown.BackgroundColor = [1 1 1];
-            app.PlotDropDown.Position = [137 25 176 30];
-            app.PlotDropDown.Value = '13';
+            app.PlotDropDown.Position = [137 30 176 25];
+            app.PlotDropDown.Value = '10';
 
             % Create SIRDPlotTab
             app.SIRDPlotTab = uitab(app.TabGroup);
             app.SIRDPlotTab.Title = 'SIRD Plot';
-            app.SIRDPlotTab.BackgroundColor = [0.8549 0.1608 0.1098];
-            app.SIRDPlotTab.ForegroundColor = [0.8549 0.1608 0.1098];
+            app.SIRDPlotTab.BackgroundColor = [0.8 0.8 0.8];
 
             % Create PlotDropDown_2Label
             app.PlotDropDown_2Label = uilabel(app.SIRDPlotTab);
             app.PlotDropDown_2Label.HorizontalAlignment = 'right';
-            app.PlotDropDown_2Label.FontName = 'Comic Sans MS';
             app.PlotDropDown_2Label.FontSize = 20;
             app.PlotDropDown_2Label.FontColor = [1 1 1];
             app.PlotDropDown_2Label.Position = [28 24 41 31];
@@ -416,35 +390,34 @@ classdef app < matlab.apps.AppBase
             app.PlotDropDown_2 = uidropdown(app.SIRDPlotTab);
             app.PlotDropDown_2.Items = {'S', 'I', 'R', 'D', 'SIRD', 'IRD', ''};
             app.PlotDropDown_2.ItemsData = {'1', '2', '3', '4', '5', '6'};
-            app.PlotDropDown_2.DropDownOpeningFcn = createCallbackFcn(app, @PlotDropDown_2Opening, true);
             app.PlotDropDown_2.ValueChangedFcn = createCallbackFcn(app, @PlotDropDown_2ValueChanged, true);
-            app.PlotDropDown_2.FontName = 'Comic Sans MS';
             app.PlotDropDown_2.FontSize = 20;
-            app.PlotDropDown_2.Position = [84 25 97 30];
-            app.PlotDropDown_2.Value = '5';
+            app.PlotDropDown_2.FontColor = [0.149 0.149 0.149];
+            app.PlotDropDown_2.Position = [84 30 97 25];
+            app.PlotDropDown_2.Value = '1';
 
             % Create I_naughtSpinnerLabel
             app.I_naughtSpinnerLabel = uilabel(app.SIRDPlotTab);
             app.I_naughtSpinnerLabel.HorizontalAlignment = 'right';
-            app.I_naughtSpinnerLabel.FontName = 'Comic Sans MS';
             app.I_naughtSpinnerLabel.FontSize = 20;
-            app.I_naughtSpinnerLabel.FontColor = [1 1 1];
-            app.I_naughtSpinnerLabel.Position = [225 26 92 31];
+            app.I_naughtSpinnerLabel.FontColor = [0.149 0.149 0.149];
+            app.I_naughtSpinnerLabel.Position = [234 33 83 24];
             app.I_naughtSpinnerLabel.Text = 'I_naught';
 
             % Create I_naughtSpinner
             app.I_naughtSpinner = uispinner(app.SIRDPlotTab);
             app.I_naughtSpinner.Limits = [0 50];
-            app.I_naughtSpinner.FontName = 'Comic Sans MS';
+            app.I_naughtSpinner.ValueChangedFcn = createCallbackFcn(app, @I_naughtSpinnerValueChanged, true);
             app.I_naughtSpinner.FontSize = 20;
-            app.I_naughtSpinner.Position = [327 28 43 30];
+            app.I_naughtSpinner.FontColor = [0.149 0.149 0.149];
+            app.I_naughtSpinner.Position = [327 33 43 25];
+            app.I_naughtSpinner.Value = 1;
 
             % Create YearDurationSliderLabel
             app.YearDurationSliderLabel = uilabel(app.RightPanel);
             app.YearDurationSliderLabel.HorizontalAlignment = 'center';
-            app.YearDurationSliderLabel.FontName = 'Comic Sans MS';
             app.YearDurationSliderLabel.FontSize = 16;
-            app.YearDurationSliderLabel.Position = [126 81 82 46];
+            app.YearDurationSliderLabel.Position = [129 90 77 36];
             app.YearDurationSliderLabel.Text = {'Year'; '(Duration)'};
 
             % Create YearDurationSlider
@@ -454,7 +427,6 @@ classdef app < matlab.apps.AppBase
             app.YearDurationSlider.MajorTickLabels = {'1', '2', '3', '4', '5', '6'};
             app.YearDurationSlider.ValueChangedFcn = createCallbackFcn(app, @YearDurationSliderValueChanged, true);
             app.YearDurationSlider.MinorTicks = [];
-            app.YearDurationSlider.FontName = 'Comic Sans MS';
             app.YearDurationSlider.FontSize = 14;
             app.YearDurationSlider.FontWeight = 'bold';
             app.YearDurationSlider.Position = [52 65 230 3];
@@ -463,24 +435,20 @@ classdef app < matlab.apps.AppBase
             % Create PLOTButton
             app.PLOTButton = uibutton(app.RightPanel, 'push');
             app.PLOTButton.ButtonPushedFcn = createCallbackFcn(app, @PLOTButtonPushed, true);
-            app.PLOTButton.Icon = 'resources/mcdonalds.png';
-            app.PLOTButton.BackgroundColor = [0.8549 0.1608 0.1098];
-            app.PLOTButton.FontName = 'Comic Sans MS';
+            app.PLOTButton.BackgroundColor = [0.149 0.149 0.149];
             app.PLOTButton.FontSize = 40;
             app.PLOTButton.FontWeight = 'bold';
-            app.PLOTButton.FontColor = [1 1 1];
+            app.PLOTButton.FontColor = [0.902 0.902 0.902];
             app.PLOTButton.Position = [820 25 197 66];
             app.PLOTButton.Text = 'PLOT';
 
             % Create CALCULATEButton
             app.CALCULATEButton = uibutton(app.RightPanel, 'push');
             app.CALCULATEButton.ButtonPushedFcn = createCallbackFcn(app, @CALCULATEButtonPushed, true);
-            app.CALCULATEButton.Icon = 'resources/fries.png';
-            app.CALCULATEButton.BackgroundColor = [0.8549 0.1608 0.1098];
-            app.CALCULATEButton.FontName = 'Comic Sans MS';
+            app.CALCULATEButton.BackgroundColor = [0.149 0.149 0.149];
             app.CALCULATEButton.FontSize = 18;
             app.CALCULATEButton.FontWeight = 'bold';
-            app.CALCULATEButton.FontColor = [1 1 1];
+            app.CALCULATEButton.FontColor = [0.902 0.902 0.902];
             app.CALCULATEButton.Position = [820 97 197 36];
             app.CALCULATEButton.Text = 'CALCULATE';
 
@@ -490,14 +458,13 @@ classdef app < matlab.apps.AppBase
             xlabel(app.UIAxes, 'X')
             ylabel(app.UIAxes, 'Y')
             zlabel(app.UIAxes, 'Z')
-            app.UIAxes.FontName = 'Comic Sans MS';
-            app.UIAxes.XColor = [0.8549 0.1608 0.1098];
-            app.UIAxes.YColor = [0.8549 0.1608 0.1098];
+            app.UIAxes.XColor = [0 0 0];
+            app.UIAxes.YColor = [0 0 0];
             app.UIAxes.XGrid = 'on';
             app.UIAxes.YGrid = 'on';
             app.UIAxes.FontSize = 20;
             app.UIAxes.GridColor = [0 0 0];
-            app.UIAxes.Position = [19 145 1012 576];
+            app.UIAxes.Position = [13 144 1025 565];
 
             % Show the figure after all components are created
             app.UIFigure.Visible = 'on';
